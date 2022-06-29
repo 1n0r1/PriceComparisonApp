@@ -1,4 +1,4 @@
-# TeamID-SampleProject Team
+# TeamID-teamOne Team
 
 ## Basic Information
 
