@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+
+<h1> Groceries price comparator </h1>
+
+<p> Here are all the food prices </p>
+
+<table id='allDataTable'> </table>
+
+<button onCLick='getAllDataFunction();'> Search all data test </button>
+
+<button onClick='testPoolFunction();'> Testing pool </button>
+
+<script> 
+function testPoolFunction() {
+	var xhttp = newXMLHttpRequest();
+	xhttp.open("GET", "/testPoolRequest", true);
+	xhttp.send();
+}
+function getAllDataFunction() {
+	var xhttp = new XMLHttpRequest();
+	xhttp. onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			let resp = JSON.parse(xhttp.responseText);
+			console.log(resp);
+			let content = '<tr> <th> Food </th> </tr>';
+			<!-- resp['allDataResponse'].forEach(x=> {
+				content += 
+			}); -->
+			document.getElementById('allDataTable').innerHTML = content;	
+		}
+	};
+	xhttp.open("GET", "/getAllDataRequest", true);
+	xhttp.send();
+}
+</script>
+
+<!--
+
+<h1> Groceries price comparator </h1>
+
+<p> Would you like to check the prices of some groceries? Type the name of the food in the box! </p>
+
+<label for 'food'> Food: </label>
+<input type="text" id='inputSearchData' name='searchFood'> <br><br>
+<button onClick='getSearchedDataFunction();'> Search </button>
+
+<p> Here are the food prices you wanted. </p>
+<table id='foundDataTable'>
+<tr> <th>Food</th> <th>Place</th> <th>Price</th> </tr>
+<tr> <td>Veg</td> <td>Target</td> <td>1.29</td> </tr>
+</table>
+
+<p> Would you like to add some data? Type the name of the food in the box and we'll update our database! </p>
+
+<label for 'food'> Food: </label>
+<input type="text" id='inputFood' name='food'> <br><br>
+
+<label for 'place'> Place: </label>
+<input type="text" id='inputPlace' name='place'> <br><br>
+
+<label for 'price'> Price: </label>
+<input type="number" step="0.01" id='inputPrice' name='price'> <br><br>
+
+<button onClick='addData();'> Add data </button>
+
+<p> Here are all the food prices.  </p>
+<table id='datas'>
+<tr> <th>Food</th> <th>Place</th>  <th>Price</th> </tr>
+<tr> <td>Fish</td> <td>Target</td> <td>5.00</td> </tr>
+</table>
+
+<script>
+	function getSearchedDataFunction() {
+		var xhttp = new XMLHttpRequest();
+
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				let resp = JSON.parse(xhttp.responseText);
+				console.log(resp);
+				let content = '<tr> <th>Food</th> <th>Place</th> <th>Price</th> </tr>';
+				resp['searchedDatas'].forEach(x=> {
+					content += '<tr><td>' + x['food'] + '</td><td>' + x['place'] + '</td><td>' + x['price'] + '</td><tr>'
+				});
+				document.getElementById("foundDataTable").innerHTML = content;
+			}
+		};
+		xhttp.open("GET", "/getSearchedDatas", true);
+		xhttp.send(JSON.stringify({
+			"food" : document.getElementById('inputSearchData').value	
+		}));
+	
+		xhttp.open("GET", "/getSearchedDatas", true);
+		xhttp.send();
+	}
+
+        function addData() {
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 200){
+                                getDatas();
+                        }
+                };
+                xhttp.open("POST", "/addData", true);
+                xhttp.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+                xhttp.send(JSON.stringify({
+			"food" : document.getElementById('inputFood').value,
+			"place": document.getElementById('inputPlace').value,
+			"price": document.getElementById('inputPrice').value
+		}));
+        }
+
+        function getDatas() {
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 200) {
+                                let resp = JSON.parse(xhttp.responseText);
+                                console.log(resp);
+                                let content = '<tr> <th>Food</th> <th>Place</th> <th>Price</th> </tr>';
+                                resp['datas'].forEach(x=> {
+                                	content += '<tr><td>' + x['food'] + '</td><td>' + x['place'] + '</td><td>' + x['price'] + '</td></tr>'
+                                });
+				document.getElementById("datas").innerHTML = content;
+			}
+		};
+		xhttp.open("GET", "/getDatas", true);
+		xhttp.send();
+	}
+
+	getDatas();
+
+</script>
+
+-->
+
+</body>
+</html>
