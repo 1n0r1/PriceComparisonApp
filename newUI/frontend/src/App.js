@@ -1,7 +1,7 @@
 import './App.css';
 import React, {useState, useEffect} from 'react';
-import { Container, Grid, Header, List } from "semantic-ui-react";
 import Axios from 'axios';
+import CssBaseline from '@mui/material/CssBaseline';
 
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -76,7 +76,8 @@ function App() {
   }
 
   return (
-    <div className="App">
+    <React.Fragment>
+      <CssBaseline />
       <h1> Groceries price comparator </h1>
 
       <p> Would you like to search for the prices of some groceries? Type the name of the food in the box! </p>
@@ -89,13 +90,6 @@ function App() {
       }}/>
 
       <Button onClick={postSearchProduct}> Search </Button>
-
-      {/* <p>Product Id      Product Name      Brand Name     Price     Retailer</p> */}
-      {/* <div>
-        {productList &&  productList.map ( product => <div> {product.productId + " " + product.productName + 
-                                        " " + product.brandName + " " + product.price + " " + product.retailerName} </div> ) } 
-      </div> */}
-
 
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
@@ -160,7 +154,7 @@ function App() {
       }}/>
 
       <Button onClick={postInsertProduct}> Insert Product </Button>
-
+      
       <p> Would you like to update some data on currently existing products? Type in your up-to-date data in the boxes and we'll update it in our database! </p>
 
       <TextField size="small" 
@@ -197,7 +191,8 @@ function App() {
 
       <Button onClick={postDeleteProduct}> Delete Product </Button>
 
-    </div>
+
+    </React.Fragment>
   );
 }
 
