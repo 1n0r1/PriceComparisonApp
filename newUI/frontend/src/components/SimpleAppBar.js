@@ -4,9 +4,6 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -16,8 +13,6 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import Axios from 'axios';
 import Alert from '@mui/material/Alert';
-import AlertTitle from '@mui/material/AlertTitle';
-import Stack from '@mui/material/Stack';
 
 
 export default function SimpleAppBar(e) {
@@ -87,7 +82,7 @@ export default function SimpleAppBar(e) {
   };
   
   return (
-    <div>
+    <Box sx={{ flexGrow: 1 }}>
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
@@ -157,6 +152,6 @@ export default function SimpleAppBar(e) {
       <Button onClick={handlePostLogin}>Login</Button>
     </DialogActions>
     </Dialog>
-    </div>
+    </Box>
   );
 }
