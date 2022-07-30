@@ -60,6 +60,31 @@ app.post('/api/insert', (req, res) => {
 	});
 });
 
+app.post('/api/signup', (req, res) => {
+	console.log('signingup');
+	query = "INSERT INTO User VALUES('" + req.body.username.toLowerCase() +"','" +  req.body.password +"')";
+	console.log(query);
+	createUnixSocketPool.query(query, function(err, results, fields) {
+		console.log(err);
+		if (!err)
+			res.json({'message' : 'successful'});
+		else res.json({'message' : 'unsuccessful'});
+	});
+});
+
+app.post('/api/login', (req, res) => {
+	console.log('logingin');
+	query = "SELECT COUNT(*) FROM User WHERE username='" + req.body.username.toLowerCase() +"'" + "AND password='" +  req.body.password +"'";
+	console.log(query);
+	createUnixSocketPool.query(query, function(err, results, fields) {
+		console.log(err);
+		console.log(results[0]['COUNT(*)']);
+		if (results[0]['COUNT(*)'] === 1)
+			res.json({'message' : 'successful'});
+		else res.json({'message' : 'unsuccessful'});
+	});
+});
+
 app.post('/api/update', (req, res) => {
 	console.log('updating');
 	query = "REPLACE INTO Price VALUES(" + req.body.updateProduct + ',"' + req.body.updateRetailer + '",' + req.body.updatePrice + ')';

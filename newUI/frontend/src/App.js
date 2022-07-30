@@ -12,6 +12,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import SimpleAppBar from './SimpleAppBar';
 
 function App() {
   const [searchKey, setSearchKey] = useState('');
@@ -28,6 +29,8 @@ function App() {
   const [updateRetailer, setUpdateRetailer] = useState('');
 
   const [deleteProduct, setDeleteProduct] = useState('');
+
+  const [login, setLogin] = useState({'username':null, 'password':null});
 
 
 
@@ -78,8 +81,7 @@ function App() {
   return (
     <React.Fragment>
       <CssBaseline />
-      <h1> Groceries price comparator </h1>
-
+      <SimpleAppBar login={login} onLogin={setLogin}/>
       <p> Would you like to search for the prices of some groceries? Type the name of the food in the box! </p>
 
       <TextField size="small" 
