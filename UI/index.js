@@ -36,6 +36,17 @@ createUnixSocketPool.query('SELECT * FROM Product LIMIT 10', function (error, re
   console.log('The solution is: ', results);
 });
 
+
+app.get('./getProductData', (req, res) => {
+	console.log('getting all data');
+	query = `select * from Product limit 5;`;
+	connection.query(query, function(err, results, fields) {
+		console.log(results);
+		res.json({'message' : 'Lookup successful', 'allDataResponse' : results});
+	});
+});
+
+
 // app.get('/', (req, res) => {
 // 	res.sendFile('index.html', { root: __dirname + "/static" } ) ;
 // });
