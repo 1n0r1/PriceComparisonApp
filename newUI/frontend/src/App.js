@@ -1,7 +1,18 @@
 import './App.css';
 import React, {useState, useEffect} from 'react';
 import { Container, Grid, Header, List } from "semantic-ui-react";
-import Axios from 'axios'
+import Axios from 'axios';
+
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+
 function App() {
   const [searchKey, setSearchKey] = useState('');
   const [productList, setProductList] = useState('');
@@ -70,76 +81,121 @@ function App() {
 
       <p> Would you like to search for the prices of some groceries? Type the name of the food in the box! </p>
 
-      <label> Product Name: </label>
-      <input type="text" onChange={(e) => {
+      <TextField size="small" 
+          label="Product Name"
+          id="outlined-size-small"
+          onChange={(e) => {
           setSearchKey(e.target.value);
       }}/>
 
-      <button onClick={postSearchProduct}> Search </button>
+      <Button onClick={postSearchProduct}> Search </Button>
 
-      <p>Product Id      Product Name      Brand Name     Price     Retailer</p>
-      <div>
+      {/* <p>Product Id      Product Name      Brand Name     Price     Retailer</p> */}
+      {/* <div>
         {productList &&  productList.map ( product => <div> {product.productId + " " + product.productName + 
                                         " " + product.brandName + " " + product.price + " " + product.retailerName} </div> ) } 
-      </div>
+      </div> */}
 
+
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+          <TableHead>
+            <TableRow>
+              <TableCell>Product Id</TableCell>
+              <TableCell>Name</TableCell>
+              <TableCell>Brand</TableCell>
+              <TableCell>Price</TableCell>
+              <TableCell> Retailer</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {productList && productList.map((row) => (
+              <TableRow>
+                <TableCell>{row.productId}</TableCell>
+                <TableCell>{row.productName}</TableCell>
+                <TableCell>{row.brandName}</TableCell>
+                <TableCell>{row.price}</TableCell>
+                <TableCell>{row.retailerName}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      
       <p> Would you like to insert some data on new products? Type the new data in the boxes and we'll insert it into our database! </p>
 
-      <label> Product: </label>
-      <input type="text" onChange={(e) => {
+      <TextField size="small" 
+          label="Product Name"
+          id="outlined-size-small"
+          onChange={(e) => {
           setInsertProduct(e.target.value);
       }}/>
 
-      <label> Retailer: </label>
-      <input type="text" onChange={(e) => {
+      <TextField size="small" 
+          label="Retailer"
+          id="outlined-size-small"
+          onChange={(e) => {
           setInsertRetailer(e.target.value);
       }}/>
 
-      <label> Price: </label>
-      <input type="text" onChange={(e) => {
+      <TextField size="small" 
+          label="Price"
+          id="outlined-size-small"
+          onChange={(e) => {
           setInsertPrice(e.target.value);
       }}/>
 
-      <label> URL: </label>
-      <input type="text" onChange={(e) => {
+      <TextField size="small" 
+          label="URL"
+          id="outlined-size-small"
+          onChange={(e) => {
           setInsertUrl(e.target.value);
       }}/>
 
-      <label> Brand: </label>
-      <input type="text" onChange={(e) => {
+      <TextField size="small" 
+          label="Brand"
+          id="outlined-size-small"
+          onChange={(e) => {
           setInsertBrand(e.target.value);
       }}/>
 
-      <button onClick={postInsertProduct}> Insert Product </button>
+      <Button onClick={postInsertProduct}> Insert Product </Button>
 
       <p> Would you like to update some data on currently existing products? Type in your up-to-date data in the boxes and we'll update it in our database! </p>
 
-      <label> Product ID: </label>
-      <input type="text" onChange={(e) => {
+      <TextField size="small" 
+          label="Product Id"
+          id="outlined-size-small"
+          onChange={(e) => {
           setUpdateProduct(e.target.value);
       }}/>
 
-      <label> Price: </label>
-      <input type="text" onChange={(e) => {
+      <TextField size="small" 
+          label="Price"
+          id="outlined-size-small"
+          onChange={(e) => {
           setUpdatePrice(e.target.value);
       }}/>
 
 
-      <label> Retailer: </label>
-      <input type="text" onChange={(e) => {
+      <TextField size="small" 
+          label="Retailer"
+          id="outlined-size-small"
+          onChange={(e) => {
           setUpdateRetailer(e.target.value);
       }}/>
 
-      <button onClick={postUpdateProduct}> Update Product </button>
+      <Button onClick={postUpdateProduct}> Update Price </Button>
 
       <p> Is there a product in our database that doesn't exist anymore? Type the product ID in the box and we'll delete it from our database! </p>
 
-      <label> Product ID: </label>
-      <input type="text" onChange={(e) => {
+      <TextField size="small" 
+          label="Product Id"
+          id="outlined-size-small" onChange={(e) => {
           setDeleteProduct(e.target.value);
       }}/>
 
-      <button onClick={postDeleteProduct}> Delete Data </button>
+      <Button onClick={postDeleteProduct}> Delete Product </Button>
 
     </div>
   );
