@@ -17,7 +17,7 @@ export default function Search() {
     const [productList, setProductList] = useState('');
     const postSearchProduct = () => {
       console.log('Searching ', searchKey);
-      Axios.post('http://localhost:3002/api/search', {
+      Axios.post('https://backend-erh2l5lpja-uc.a.run.app/api/search', {
         searchKey: searchKey
       }).then(function (response) {
         setProductList(response.data.body);

@@ -25,6 +25,7 @@ export default function SimpleAppBar(e) {
 
   const handleLogin = () => {
     setOpen(true);
+    setAnchorEl(null);
   };
 
   const handleCloseForm = () => {
@@ -44,7 +45,7 @@ export default function SimpleAppBar(e) {
 
   const handlePostLogin = () => {
     setUsernameTaken(false);
-    Axios.post('http://localhost:3002/api/login', {
+    Axios.post('https://backend-erh2l5lpja-uc.a.run.app/api/login', {
       username: username,
       password: password
     }).then(function (response) {
@@ -62,7 +63,7 @@ export default function SimpleAppBar(e) {
   const handlePostSignup = () => {
     setWrongLogin(false);
     setAnchorEl(null);
-    Axios.post('http://localhost:3002/api/signup', {
+    Axios.post('https://backend-erh2l5lpja-uc.a.run.app/api/signup', {
       username: username,
       password: password
     }).then(function (response) {

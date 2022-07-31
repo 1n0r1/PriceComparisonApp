@@ -14,7 +14,7 @@ export default function Insert() {
 
     const postInsertProduct = () => {
       console.log('Inserting ', insertProduct);
-      Axios.post('http://localhost:3002/api/insert', {
+      Axios.post('https://backend-erh2l5lpja-uc.a.run.app/api/insert', {
         insertProduct: insertProduct,
         insertRetailer: insertRetailer,
         insertPrice: insertPrice,

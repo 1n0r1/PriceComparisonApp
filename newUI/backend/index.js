@@ -106,6 +106,7 @@ app.post('/api/delete', (req, res) => {
 	});
 });
 
-app.listen(3002, () => {
-    console.log("running on port 3002")
+const port = process.env.PORT || 8080;
+app.listen(port, () => {
+    console.log("running on port ", port)
 })

@@ -8,7 +8,7 @@ export default function Delete() {
     const [deleteProduct, setDeleteProduct] = useState('');
 
     const postDeleteProduct = () => {
-        Axios.post('http://localhost:3002/api/delete', {
+        Axios.post('https://backend-erh2l5lpja-uc.a.run.app/api/delete', {
           deleteProduct: deleteProduct
         }).then(function (response) {
           console.log("deleted");

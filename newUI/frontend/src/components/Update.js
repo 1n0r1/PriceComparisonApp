@@ -10,7 +10,7 @@ export default function Update() {
     const [updateRetailer, setUpdateRetailer] = useState('');
 
     const postUpdateProduct = () => {
-        Axios.post('http://localhost:3002/api/update', {
+        Axios.post('https://backend-erh2l5lpja-uc.a.run.app/api/update', {
             updateProduct: updateProduct,
             updatePrice: updatePrice,
             updateRetailer: updateRetailer
