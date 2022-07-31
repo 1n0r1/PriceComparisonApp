@@ -2,15 +2,22 @@ import React, {useState} from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
+import Alert from '@mui/material/Alert';
 
 export default function Delete(e) {
     const [deleteProduct, setDeleteProduct] = useState('');
+    const [invalidId, setInvalidId] = useState(false);
 
     const postDeleteProduct = () => {
         e.axiosInstance.post('/api/delete', {
           deleteProduct: deleteProduct
         }).then(function (response) {
-          console.log("deleted");
+            if (response.data.message === 'delete successful') {
+                console.log("Delete success");
+                setInvalidId(false);
+            } else {
+                setInvalidId(true);
+            }
         })
     }
     return (
@@ -22,7 +29,9 @@ export default function Delete(e) {
                 id="outlined-size-small" onChange={(e) => {
                 setDeleteProduct(e.target.value);
             }}/>
-
+            {invalidId ? <Alert severity="error">
+                Could not find the product id
+            </Alert>: <></>}
             <Button onClick={postDeleteProduct}> Delete Product </Button>
         </Box>
     )

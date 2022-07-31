@@ -2,19 +2,32 @@ import React, {useState} from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
+import Alert from '@mui/material/Alert';
 
 export default function Update(e) {
     const [updateProduct, setUpdateProduct] = useState('');
     const [updatePrice, setUpdatePrice] = useState('');
     const [updateRetailer, setUpdateRetailer] = useState('');
+    const [errorUpdate, setErrorUpdate] = useState(false);
+    const [invalidId, setInvalidId] = useState(false);
 
     const postUpdateProduct = () => {
         e.axiosInstance.post('/api/update', {
             updateProduct: updateProduct,
             updatePrice: updatePrice,
-            updateRetailer: updateRetailer
+            updateRetailer: updateRetailer,
+            username: e.login.username,
+            password: e.login.password
         }).then(function (response) {
-            console.log("Update success");
+            if (response.data.message === 'update successful') {
+                console.log("Update success");
+                setErrorUpdate(false);
+                setInvalidId(false);
+            } else if (response.data.message === 'invalid productId') {
+                setInvalidId(true);
+            } else {
+                setErrorUpdate(true);
+            }
         })
     }
 
@@ -43,8 +56,17 @@ export default function Update(e) {
                 onChange={(e) => {
                 setUpdateRetailer(e.target.value);
             }}/>
+            {e.login.username===null ? <Alert severity="error">
+                Please login before you update
+            </Alert>: <></>}
+            {errorUpdate ? <Alert severity="error">
+                Something happened. Try logout and login again
+            </Alert>: <></>}
+            {invalidId ? <Alert severity="error">
+                Could not find the product id
+            </Alert>: <></>}
 
-            <Button onClick={postUpdateProduct}> Update Price </Button>
+            <Button disabled={e.login.username===null} onClick={postUpdateProduct}> Update Price </Button>
         </Box>
     )
 }

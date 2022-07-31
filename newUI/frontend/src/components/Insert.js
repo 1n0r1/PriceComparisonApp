@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
+import Alert from '@mui/material/Alert';
 
 export default function Insert(e) {
     
@@ -10,6 +11,8 @@ export default function Insert(e) {
     const [insertPrice, setInsertPrice] = useState('');
     const [insertUrl, setInsertUrl] = useState('');
     const [insertBrand, setInsertBrand] = useState('');
+    const [insertTag, setInsertTag] = useState('');
+    const [errorInsert, setErrorInsert] = useState(false);
 
     const postInsertProduct = () => {
       console.log('Inserting ', insertProduct);
@@ -18,9 +21,17 @@ export default function Insert(e) {
         insertRetailer: insertRetailer,
         insertPrice: insertPrice,
         insertUrl: insertUrl,
-        insertBrand: insertBrand
+        insertBrand: insertBrand,
+        insertTag: insertTag,
+        username: e.login.username,
+        password: e.login.password
       }).then(function (response) {
-        console.log("Insert success");
+        if (response.data.message === 'insert successful') {
+            console.log("Insert success");
+            setErrorInsert(false);
+        } else {
+            setErrorInsert(true);
+        }
       })
     };
 
@@ -62,7 +73,20 @@ export default function Insert(e) {
                 onChange={(e) => {
                 setInsertRetailer(e.target.value);
             }}/>
-            <Button onClick={postInsertProduct}> Insert Product </Button>
+
+            <TextField size="small" 
+                label="Tag"
+                id="outlined-size-small"
+                onChange={(e) => {
+                setInsertTag(e.target.value);
+            }}/>
+            {e.login.username===null ? <Alert severity="error">
+                Please login before you insert
+            </Alert>: <></>}
+            {errorInsert ? <Alert severity="error">
+                Something happened. Try logout and login again
+            </Alert>: <></>}
+            <Button disabled={e.login.username===null} onClick={postInsertProduct}> Insert Product </Button>
         </Box>
     )
 }

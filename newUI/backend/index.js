@@ -41,7 +41,7 @@ app.get('/', (req, res) => {
 app.post('/api/search', (req, res) => {
     const searchKey = req.body.searchKey;
 	console.log('searching ', searchKey);
-	query = "SELECT * FROM Product NATURAL JOIN Price NATURAL JOIN Retailer WHERE productName LIKE '%" + searchKey +"%' limit 20;";
+	query = "SELECT * FROM Product NATURAL JOIN Price NATURAL JOIN ProductTagList WHERE productName LIKE '%" + searchKey +"%' limit 20;";
 	console.log(query);
 	createUnixSocketPool.query(query, function(err, results, fields) {
 		console.log(results);
@@ -51,13 +51,28 @@ app.post('/api/search', (req, res) => {
 
 app.post('/api/insert', (req, res) => {
 	console.log('inserting');
-	query = "CALL InsertProductPrice('" + req.body.insertProduct + "','" + req.body.insertUrl + "','" + req.body.insertBrand + "','"
-				+ req.body.insertRetailer + "'," + req.body.insertPrice + ')';
-	console.log(query);
-	createUnixSocketPool.query(query, function(err, results, fields) {
-		console.log(results);
-		res.json({'message' : 'insert successful', 'body' : results});
-	});
+	if (req.body.username == null) {
+		res.json({'message' : 'not logged in'});
+	} else {
+		query = "SELECT COUNT(*) FROM User WHERE username='" + req.body.username.toLowerCase() +"'" + "AND password='" +  req.body.password +"'";
+		console.log(query);
+		createUnixSocketPool.query(query, function(err, results, fields) {
+			console.log(err);
+			console.log(results[0]['COUNT(*)']);
+			if (results[0]['COUNT(*)'] === 1) {
+				query1 = "CALL InsertProductPrice('" + req.body.insertProduct + "','" + req.body.insertUrl + "','" + req.body.insertBrand + "','"
+					+ req.body.insertRetailer + "'," + req.body.insertPrice + ",'" + req.body.insertTag + "','" + req.body.username.toLowerCase() + "')";
+				console.log(query1);
+				createUnixSocketPool.query(query1, function(err, results, fields) {
+					console.log(results);
+					if (!err)
+						res.json({'message' : 'insert successful'});
+					else res.json({'message' : 'unsuccessful'});
+				});
+			}
+			else res.json({'message' : 'unsuccessful'});
+		});
+	}
 });
 
 app.post('/api/signup', (req, res) => {
@@ -87,12 +102,28 @@ app.post('/api/login', (req, res) => {
 
 app.post('/api/update', (req, res) => {
 	console.log('updating');
-	query = "REPLACE INTO Price VALUES(" + req.body.updateProduct + ',"' + req.body.updateRetailer + '",' + req.body.updatePrice + ')';
-	console.log(query);
-	createUnixSocketPool.query(query, function(err, results, fields) {
-		console.log(results);
-		res.json({'message' : 'Lookup successful', 'body' : results});
-	});
+
+	if (req.body.username == null) {
+		res.json({'message' : 'not logged in'});
+	} else {
+		query = "SELECT COUNT(*) FROM User WHERE username='" + req.body.username.toLowerCase() +"'" + "AND password='" +  req.body.password +"'";
+		console.log(query);
+		createUnixSocketPool.query(query, function(err, results, fields) {
+			console.log(err);
+			console.log(results[0]['COUNT(*)']);
+			if (results[0]['COUNT(*)'] === 1) {
+				query1 = "REPLACE INTO Price VALUES(" + req.body.updateProduct + ',"' + req.body.updateRetailer + '",' + req.body.updatePrice + ',"' + req.body.username.toLowerCase() + '")';
+				console.log(query1);
+				createUnixSocketPool.query(query1, function(err, results, fields) {
+					console.log(results);
+					if (!err)
+						res.json({'message' : 'update successful'});
+					else res.json({'message' : 'invalid productId'});
+				});
+			}
+			else res.json({'message' : 'unsuccessful'});
+		});
+	}
 });
 
 app.post('/api/delete', (req, res) => {
@@ -101,12 +132,13 @@ app.post('/api/delete', (req, res) => {
 	query = "DELETE FROM Product WHERE productId = " + productId;
 	console.log(query);
 	createUnixSocketPool.query(query, function(err, results, fields) {
-		console.log(results);
-		res.json({'message' : 'deleting successful', 'body' : results});
+		if (results.affectedRows > 0)
+			res.json({'message' : 'delete successful'});
+		else res.json({'message' : 'invalid productId'});
 	});
 });
 
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 2003;
 app.listen(port, () => {
     console.log("running on port ", port)
 })

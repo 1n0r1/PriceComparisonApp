@@ -44,8 +44,10 @@ export default function Search(e) {
               <TableCell>Name</TableCell>
               <TableCell>Url</TableCell>
               <TableCell>Brand</TableCell>
+              <TableCell>Tag</TableCell>
               <TableCell>Price</TableCell>
               <TableCell> Retailer</TableCell>
+              <TableCell> Added/Updated By</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -55,8 +57,10 @@ export default function Search(e) {
                 <TableCell>{row.productName}</TableCell>
                 <TableCell>{row.productUrl}</TableCell>
                 <TableCell>{row.brandName}</TableCell>
+                <TableCell>{row.tagList}</TableCell>
                 <TableCell>{row.price}</TableCell>
                 <TableCell>{row.retailerName}</TableCell>
+                <TableCell>{row.username}</TableCell>
               </TableRow>
             ))}
           </TableBody>
