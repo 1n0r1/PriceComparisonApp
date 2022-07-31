@@ -1,14 +1,13 @@
 import React, {useState} from 'react';
-import Axios from 'axios';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 
-export default function Delete() {
+export default function Delete(e) {
     const [deleteProduct, setDeleteProduct] = useState('');
 
     const postDeleteProduct = () => {
-        Axios.post('https://backend-erh2l5lpja-uc.a.run.app/api/delete', {
+        e.axiosInstance.post('/api/delete', {
           deleteProduct: deleteProduct
         }).then(function (response) {
           console.log("deleted");

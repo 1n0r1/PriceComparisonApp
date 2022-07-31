@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import Axios from 'axios';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -12,12 +11,12 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 
 
-export default function Search() {
+export default function Search(e) {
     const [searchKey, setSearchKey] = useState('');
     const [productList, setProductList] = useState('');
     const postSearchProduct = () => {
       console.log('Searching ', searchKey);
-      Axios.post('https://backend-erh2l5lpja-uc.a.run.app/api/search', {
+      e.axiosInstance.post('/api/search', {
         searchKey: searchKey
       }).then(function (response) {
         setProductList(response.data.body);

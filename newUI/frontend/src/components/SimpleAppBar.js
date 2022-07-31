@@ -11,7 +11,6 @@ import DialogContentText from '@mui/material/DialogContentText';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-import Axios from 'axios';
 import Alert from '@mui/material/Alert';
 
 
@@ -45,7 +44,7 @@ export default function SimpleAppBar(e) {
 
   const handlePostLogin = () => {
     setUsernameTaken(false);
-    Axios.post('https://backend-erh2l5lpja-uc.a.run.app/api/login', {
+    e.axiosInstance.post('/api/login', {
       username: username,
       password: password
     }).then(function (response) {
@@ -63,7 +62,7 @@ export default function SimpleAppBar(e) {
   const handlePostSignup = () => {
     setWrongLogin(false);
     setAnchorEl(null);
-    Axios.post('https://backend-erh2l5lpja-uc.a.run.app/api/signup', {
+    e.axiosInstance.post('/api/signup', {
       username: username,
       password: password
     }).then(function (response) {

@@ -1,10 +1,9 @@
 import React, {useState} from 'react';
-import Axios from 'axios';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 
-export default function Insert() {
+export default function Insert(e) {
     
     const [insertProduct, setInsertProduct] = useState('');
     const [insertRetailer, setInsertRetailer] = useState('');
@@ -14,7 +13,7 @@ export default function Insert() {
 
     const postInsertProduct = () => {
       console.log('Inserting ', insertProduct);
-      Axios.post('https://backend-erh2l5lpja-uc.a.run.app/api/insert', {
+      e.axiosInstance.post('/api/insert', {
         insertProduct: insertProduct,
         insertRetailer: insertRetailer,
         insertPrice: insertPrice,

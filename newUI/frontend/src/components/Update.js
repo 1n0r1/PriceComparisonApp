@@ -1,16 +1,15 @@
 import React, {useState} from 'react';
-import Axios from 'axios';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 
-export default function Update() {
+export default function Update(e) {
     const [updateProduct, setUpdateProduct] = useState('');
     const [updatePrice, setUpdatePrice] = useState('');
     const [updateRetailer, setUpdateRetailer] = useState('');
 
     const postUpdateProduct = () => {
-        Axios.post('https://backend-erh2l5lpja-uc.a.run.app/api/update', {
+        e.axiosInstance.post('/api/update', {
             updateProduct: updateProduct,
             updatePrice: updatePrice,
             updateRetailer: updateRetailer
