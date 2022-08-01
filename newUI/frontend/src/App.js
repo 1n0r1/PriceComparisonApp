@@ -9,8 +9,8 @@ import AdvancedSearch from './components/AdvancedSearch';
 function App() {
   const [login, setLogin] = useState({'username':null, 'password':null});
   const axiosInstance = Axios.create({
-    // baseURL: 'https://backend-erh2l5lpja-uc.a.run.app/'
-    baseURL: 'http://localhost:3002/'
+    baseURL: 'https://backend-erh2l5lpja-uc.a.run.app/'
+    // baseURL: 'http://localhost:3002/'
   });
 
   return (
