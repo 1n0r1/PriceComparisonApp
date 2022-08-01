@@ -1,0 +1,164 @@
+CREATE TABLE Retailer (
+	retailerName VARCHAR(255),
+	PRIMARY KEY (retailerName)
+);
+
+CREATE TABLE Brand (
+	brandName VARCHAR(255),
+	PRIMARY KEY (brandName)
+);
+
+CREATE Table Product (
+	productId INT AUTO_INCREMENT,
+	productName VARCHAR(255),
+	productUrl VARCHAR(255),
+	brandName VARCHAR(255),
+	PRIMARY KEY (productId),
+	FOREIGN KEY (brandName)
+	REFERENCES Brand(brandName)
+	ON DELETE SET NULL
+	ON UPDATE CASCADE
+);
+
+CREATE TABLE Price (
+	productId INT,
+	retailerName VARCHAR(255),
+	price DOUBLE,
+	username VARCHAR(255) DEFAULT "BOT",
+	PRIMARY KEY (productId, retailerName),
+	FOREIGN KEY (productId)
+	REFERENCES Product(productId)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
+	FOREIGN KEY (retailerName)
+	REFERENCES Retailer(retailerName)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
+	FOREIGN KEY (username)
+	REFERENCES User(username)
+	ON DELETE SET "BOT"
+	ON UPDATE CASCADE
+);
+
+CREATE TABLE Tag (
+	productId INT,
+	Tag VARCHAR(255),
+	PRIMARY KEY (productId, Tag),
+	FOREIGN KEY (productId)
+	REFERENCES Product(productId)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE
+);
+
+CREATE TABLE User (
+	username VARCHAR(255),
+	password VARCHAR(255) BINARY,
+	PRIMARY KEY (username)
+);
+
+CREATE TRIGGER AutoAddNewBrand
+	BEFORE INSERT ON Product
+		FOR EACH ROW
+	BEGIN
+		IF NOT EXISTS(SELECT * FROM Brand WHERE brandName = new.brandName) THEN
+			INSERT INTO Brand
+				VALUES(new.brandName);
+		END IF;
+	END;
+
+CREATE TRIGGER AutoAddNewRetailer
+	BEFORE INSERT ON Price
+		FOR EACH ROW
+	BEGIN
+		IF NOT EXISTS(SELECT * FROM Retailer WHERE retailerName = new.retailerName) THEN
+			INSERT INTO Retailer
+				VALUES(new.retailerName);
+		END IF;
+	END;
+
+CREATE PROCEDURE InsertTagIntoTagTable (IN productId INT, IN tags VARCHAR(255), IN delim VARCHAR(1))
+	BEGIN
+		DECLARE pos INT Default 0 ;
+      	DECLARE str VARCHAR(255);
+      	simple_loop: LOOP
+         		SET pos=pos+1;
+         		SET str = REPLACE(SUBSTRING(SUBSTRING_INDEX(tags, delim, pos), LENGTH(SUBSTRING_INDEX(tags, delim, pos -1)) + 1),delim, '');
+         		IF str='' THEN
+				LEAVE simple_loop;
+         		END IF;
+			REPLACE INTO Tag VALUES(productId, TRIM(str));
+   		END LOOP simple_loop;
+	END;
+
+CREATE PROCEDURE InsertProductPrice (IN name VARCHAR(255), IN url VARCHAR(255), IN brand VARCHAR(255), IN retailer VARCHAR(255), IN price DOUBLE, IN tags VARCHAR(255), IN user VARCHAR(255))
+	BEGIN
+		INSERT INTO Product (productName, productUrl, brandName)
+        		VALUES(name, url, brand);
+		SET @id = (SELECT productId FROM Product 
+			WHERE productName=name 
+			AND productUrl=url AND brandName=brand
+			LIMIT 1);
+		INSERT INTO Price
+			VALUES(@id, retailer, price, user);
+		CALL InsertTagIntoTagTable(@id, tags, ',');
+	END;
+
+CREATE PROCEDURE AdvancedSearch (IN searchKey VARCHAR(255), IN tags VARCHAR(255))
+	BEGIN
+		
+		DECLARE pos INT Default 0 ;
+		DECLARE done INT DEFAULT 0;
+      	DECLARE str VARCHAR(255);		
+		DECLARE currTag VARCHAR(255);
+		DECLARE delim VARCHAR(1) DEFAULT ',';
+		DECLARE tagcur CURSOR FOR SELECT Tag FROM SearchTagList;
+		DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+
+		DROP TABLE IF EXISTS SearchTagList;
+		CREATE TABLE SearchTagList (
+			Tag VARCHAR(255)
+		);
+
+		simple_loop: LOOP
+         		SET pos=pos+1;
+         		SET str = REPLACE(SUBSTRING(SUBSTRING_INDEX(tags, delim, pos), LENGTH(SUBSTRING_INDEX(tags, delim, pos -1)) + 1),delim, '');
+         		IF str='' THEN
+				LEAVE simple_loop;
+         		END IF;
+			INSERT INTO SearchTagList VALUES(TRIM(str));
+   		END LOOP simple_loop;
+
+		DROP TABLE IF EXISTS ProductIdList;
+		CREATE TABLE ProductIdList (
+			prodid INT,
+			PRIMARY KEY (prodid)
+		);
+		OPEN tagcur;
+		REPEAT
+			FETCH tagcur INTO currTag;
+			REPLACE INTO ProductIdList
+				SELECT DISTINCT productId
+				FROM (SELECT productId FROM Product WHERE productName LIKE CONCAT('%', searchKey , '%')) AS A
+				NATURAL JOIN (SELECT * FROM Tag WHERE tags='' OR Tag=currTag) AS B;
+		UNTIL done
+		END REPEAT;
+		CLOSE tagcur;
+		
+		DROP TABLE IF EXISTS SearchResultTable;
+		CREATE TABLE SearchResultTable (
+			productId INT,
+			productName VARCHAR(255),
+			productUrl VARCHAR(255),
+			brandName VARCHAR(255),
+			tagList VARCHAR(255),
+			retailerName VARCHAR(255),
+			price DOUBLE,
+			username VARCHAR(255)
+		);
+
+		INSERT INTO SearchResultTable
+			SELECT productId, productName, productUrl, brandName, tagList, retailerName, price, username
+			FROM (SELECT * FROM Product WHERE EXISTS(SELECT * FROM ProductIdList WHERE prodid=productId)) AS A
+			NATURAL JOIN Price 
+			NATURAL JOIN (SELECT productId, GROUP_CONCAT(Tag SEPARATOR ', ') AS tagList FROM Tag GROUP BY productId) AS B;
+	END;
