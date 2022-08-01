@@ -23,7 +23,7 @@ createUnixSocketPool.connect(function (err) {
 	}
 });
 
-createUnixSocketPool.query('SELECT * FROM Product LIMIT 20', function (error, results, fields) {
+createUnixSocketPool.query('SELECT * FROM Product LIMIT 10', function (error, results, fields) {
   if (error) throw error;
   console.log('The solution is: ', results);
   console.log('Connection test done');
@@ -41,11 +41,55 @@ app.get('/', (req, res) => {
 app.post('/api/search', (req, res) => {
     const searchKey = req.body.searchKey;
 	console.log('searching ', searchKey);
-	query = "SELECT * FROM Product NATURAL JOIN Price NATURAL JOIN ProductTagList WHERE productName LIKE '%" + searchKey +"%' limit 20;";
+	query = 	"SELECT * FROM Product NATURAL JOIN Price NATURAL JOIN "
+				+		"(SELECT productId, GROUP_CONCAT(Tag SEPARATOR ', ') AS tagList "
+				+		"FROM Tag GROUP BY productId) AS TEMP "
+				+"WHERE productName LIKE '%" + searchKey +"%' limit 10;";
 	console.log(query);
 	createUnixSocketPool.query(query, function(err, results, fields) {
 		console.log(results);
 		res.json({'message' : 'Lookup successful', 'body' : results});
+	});
+});
+
+app.post('/api/advancedsearch', (req, res) => {
+    const searchKey = req.body.searchKey;
+	console.log('searching ', searchKey);
+
+	var tagToQuery = "";
+	for (var j = 0; j < req.body.tagList.length; j++) {
+		if (req.body.tagList[j].check === 1) {
+			if (tagToQuery === "")
+				tagToQuery = req.body.tagList[j].Tag;
+			else tagToQuery =  tagToQuery + ', ' + req.body.tagList[j].Tag;
+		}
+	}
+	console.log(tagToQuery);
+	query = "SELECT Tag, COUNT(*) as count FROM Tag NATURAL JOIN Product WHERE productName LIKE '%" + searchKey +"%' GROUP BY Tag ORDER BY count DESC LIMIT 50";
+	console.log(query);
+	createUnixSocketPool.query(query, function(err, results3, fields) {
+		query1 = "CALL AdvancedSearch('" + searchKey + "','" + tagToQuery + "')";
+		var results = results3;
+		console.log(query1);
+		createUnixSocketPool.query(query1, function(err1, results1, fields1) {
+			query2 = "SELECT * FROM SearchResultTable LIMIT 50";
+			console.log(query2);
+			createUnixSocketPool.query(query2, function(err2, results2, fields2) {
+				for (var i = 0; i < results.length; i++) {
+					var check = 0;
+					for (var j = 0; j < req.body.tagList.length; j++) {
+						if (results[i].Tag === req.body.tagList[j].Tag) {
+							check = req.body.tagList[j].check;
+							break;
+						}
+					}
+					results[i].check = check;
+				}
+				console.log(err1);
+				console.log(results2);
+				res.json({'message' : 'Lookup successful', 'body' : results2, 'tagList' : results});
+			});
+		});
 	});
 });
 
@@ -138,7 +182,7 @@ app.post('/api/delete', (req, res) => {
 	});
 });
 
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 3002;
 app.listen(port, () => {
     console.log("running on port ", port)
 })

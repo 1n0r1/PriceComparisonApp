@@ -1,27 +1,26 @@
 import './App.css';
 import React, {useState} from 'react';
 import Axios from 'axios';
-import CssBaseline from '@mui/material/CssBaseline';
+import {BrowserRouter, Routes, Route} from "react-router-dom";
+import Home from './Home'
 import SimpleAppBar from './components/SimpleAppBar';
-import Search from './components/Search';
-import Insert from './components/Insert';
-import Update from './components/Update';
-import Delete from './components/Delete';
+import AdvancedSearch from './components/AdvancedSearch';
 
 function App() {
   const [login, setLogin] = useState({'username':null, 'password':null});
   const axiosInstance = Axios.create({
-    baseURL: 'https://backend-erh2l5lpja-uc.a.run.app/'
+    // baseURL: 'https://backend-erh2l5lpja-uc.a.run.app/'
+    baseURL: 'http://localhost:3002/'
   });
+
   return (
-    <React.Fragment>
-      <CssBaseline/>
+    <BrowserRouter>
       <SimpleAppBar axiosInstance={axiosInstance} login={login} onLogin={setLogin}/>
-      <Search axiosInstance={axiosInstance}/>
-      <Insert axiosInstance={axiosInstance} login={login}/>
-      <Update axiosInstance={axiosInstance} login={login}/>
-      <Delete axiosInstance={axiosInstance}/>
-    </React.Fragment>
+      <Routes>
+          <Route path="/" element={<Home axiosInstance={axiosInstance} login={login} setLogin={setLogin}/>}/>
+          <Route path="/search" element={<AdvancedSearch axiosInstance={axiosInstance} login={login} setLogin={setLogin}/>}/>
+      </Routes>
+    </BrowserRouter>
   );
 }
 

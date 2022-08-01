@@ -12,6 +12,7 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import Alert from '@mui/material/Alert';
+import {Link } from "react-router-dom";
 
 
 export default function SimpleAppBar(e) {
@@ -89,6 +90,8 @@ export default function SimpleAppBar(e) {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Groceries Price Comparator
           </Typography>
+          <Button color="inherit" component={Link} to={"/"}> Home </Button>
+          <Button color="inherit" component={Link} to={"/search"}> Advanced Search </Button>
           <Button color="inherit" onClick={handleMenu}> 
           {e.login.username!==null ? 'Logged in as ' + e.login.username : 'Login'}
           </Button>
