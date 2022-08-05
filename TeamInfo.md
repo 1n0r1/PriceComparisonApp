@@ -1,4 +1,4 @@
-# TeamID-teamOne Team
+# Team 014 - Price Comparator App - teamOne
 
 ## Basic Information
 
@@ -19,8 +19,8 @@
 
 |   Info      |        Description     |
 | ----------- | ---------------------- |
-|  Title      |       ProjectTitle     |
-| System URL  |      link_to_system    |
+|  Title      |       Price Comparator App     |
+| System URL  |      [link](https://frontend-erh2l5lpja-uc.a.run.app/)    |
 | Video Link  |      link_to_video     |
 
 ## Project Summary
