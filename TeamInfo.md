@@ -1,4 +1,4 @@
-# Team014 - Price Comparator App - teamOne
+# Team014-teamOne Team
 
 ## Basic Information
 
