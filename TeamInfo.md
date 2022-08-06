@@ -9,7 +9,7 @@
 | Captain     |   Everett Yang         |
 | Captain     |      esyang@illinois.edu    |
 | Member1     |   Jie Yeo   |
-| Member1     |      jy379@illinois.edu     |
+| Member1     |      jieyeo2@illinois.edu     |
 | Member2     |   Khanh Nguyen   |
 | Member2     |      khanhn2@illinois.edu     |
 | Member3     |   Ankushi Dutta   |
