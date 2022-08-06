@@ -20,8 +20,8 @@
 |   Info      |        Description     |
 | ----------- | ---------------------- |
 |  Title      |       Price Comparator App     |
-| System URL  |      [link](https://frontend-erh2l5lpja-uc.a.run.app/)    |
-| Video Link  |      link_to_video     |
+| System URL  |      [link_to_website](https://frontend-erh2l5lpja-uc.a.run.app/)    |
+| Video Link  |      [link_to_video](https://youtu.be/eZPbnxG_YGo)     |
 
 ## Project Summary
 Our project is a data centric web application that scrapes and aggregates data from popular US grocers in order to provide users with useful  on-demand information on the current inventory, best prices, etc. The project will utilize a relational database schema such as MySQL to store relevant information on both grocers and their products. 
